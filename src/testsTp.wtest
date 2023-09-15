@@ -1,0 +1,9 @@
+import tp.*
+
+describe "Test de Pou"
+
+test "Energia inicial de Pou" {
+
+	assert.equals(30, pou.energiaInicial())
+
+}
