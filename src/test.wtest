@@ -6,7 +6,17 @@ test "Energia inicial de Pou" {
 		assert.equals(30, pou.energiaInicial())
 	}
 
-	test "Tiene Hambre Pou" {
+	test "Tiene hambre Pou" {
 		assert.notThat(pou.tieneHambre())
+	}
+
+	test "Si come fruta tiene hambre pou" {
+		pou.comer(fruta)
+		assert.that(pou.tieneHambre())
+	}
+
+	test "Cuando tiene hambre no se rie pou" {
+		pou.tieneHambre()
+		assert.that(pou.reir())
 }
 
