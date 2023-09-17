@@ -22,6 +22,16 @@ describe "Test de Pou" {
 		assert.equals(31, pou.energia())
 	}
 
+	test "Si toma benida aumenta la energia" {
+		pou.comer(bebida)
+		assert.equals(30.5, pou.energia())
+	}
+
+	test "Si come frituras disminuye la energia" {
+		pou.comer(fritura)
+		assert.equals(29.8, pou.energia())
+	}
+
 	test "Cuando juega con una pelota, se rie pou" {
 		pou.reir()
 		assert.equals("jijijiji", pou.jugar(juego))
