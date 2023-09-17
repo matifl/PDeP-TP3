@@ -14,7 +14,7 @@ describe "Test de Pou" {
 
 	test "Si come fruta tiene hambre pou" {
 		pou.comer(fruta)
-		assert.that(pou.tieneHambre())
+		assert.notThat(pou.tieneHambre())
 	}
 
 	test "Cuando juega con una pelota, se rie pou" {
@@ -27,6 +27,18 @@ describe "Test de Pou" {
 		assert.notThat(pou.tieneHambre())
 	}
 
+	test "cuando se baña su energia disminuye" {
+		pou.baniarse()
+		assert.equals(28, pou.energia())
+	}
+
+	test "cuando se baña su energia disminuye
+			cuando se energiza recupera su energia" {
+		pou.baniarse()
+		pou.energizarse()
+		assert.equals(30, pou.energia())
+	}
+
 	test "Pou tiene una salud deplorable si come frituras" {
 		pou.comer(fritura)
 		assert.equals("Deplorable", pou.salud())
@@ -37,5 +49,13 @@ describe "Test de Pou" {
 		assert.equals("Normal", pou.salud())
 	}
 
+	test "Pou tiene una salud alarmanet si come saludable e insalubre " {
+		pou.comer(fruta)
+		pou.comer(fritura)
+		assert.equals("Alarmante", pou.salud())
+	}
+
 }
+
+
 
