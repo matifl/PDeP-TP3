@@ -1,7 +1,7 @@
 /** First Wollok example */ object pou {
 
 	var property edad = 3
-	var salud
+	var property salud
 	var property energia = self.energiaInicial()
 	const property comidas = []
 	const property juegos = [ "pelota" ]
@@ -43,6 +43,7 @@
 		if (self.juegos().contains(juego)) {
 			self.reir()
 		}
+		return self.reir()
 	}
 
 	method baniarse() {

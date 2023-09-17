@@ -1,8 +1,10 @@
 import example.*
 
-describe "Test de Pou"
+describe "Test de Pou" {
 
-test "Energia inicial de Pou" {
+	var juego = "pelota"
+
+	test "Energia inicial de Pou" {
 		assert.equals(30, pou.energiaInicial())
 	}
 
@@ -15,8 +17,25 @@ test "Energia inicial de Pou" {
 		assert.that(pou.tieneHambre())
 	}
 
+	test "Cuando juega con una pelota, se rie pou" {
+		pou.reir()
+		assert.equals("jijijiji", pou.jugar(juego))
+	}
+
 	test "Cuando tiene hambre no se rie pou" {
-		pou.tieneHambre()
-		assert.that(pou.reir())
+		pou.reir()
+		assert.notThat(pou.tieneHambre())
+	}
+
+	test "Pou tiene una salud deplorable si come frituras" {
+		pou.comer(fritura)
+		assert.equals("Deplorable", pou.salud())
+	}
+
+	test "Pou tiene una salud normal si come saludable " {
+		pou.comer(fruta)
+		assert.equals("Normal", pou.salud())
+	}
+
 }
 
