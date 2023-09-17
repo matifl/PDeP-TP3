@@ -49,7 +49,7 @@ describe "Test de Pou" {
 		assert.equals("Normal", pou.salud())
 	}
 
-	test "Pou tiene una salud alarmanet si come saludable e insalubre " {
+	test "Pou tiene una salud alarmanete si come saludable e insalubre " {
 		pou.comer(fruta)
 		pou.comer(fritura)
 		assert.equals("Alarmante", pou.salud())
