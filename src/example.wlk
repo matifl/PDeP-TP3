@@ -3,8 +3,8 @@
 	var property edad = 3
 	var property salud
 	var property energia = self.energiaInicial()
-	const property comidas = []
-	const property juegos = [ "pelota" ]
+	var property comidas = []
+	var property juegos = [ "pelota" ]
 
 	method edad() {
 		return edad
