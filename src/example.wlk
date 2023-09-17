@@ -2,9 +2,10 @@
 
 	var property edad = 3
 	var property salud
-	var property energia = self.energiaInicial()
+	var property energia = 30
 	var property comidas = []
 	var property juegos = [ "pelota" ]
+	var property vecesJugadas = 0
 
 	method edad() {
 		return edad
@@ -14,9 +15,18 @@
 		self.comidas().addAll(comida)
 	}
 
+	
 	method energiaInicial() {
-		energia = self.edad() * 10
-		return energia
+		const energiaInicial = self.edad() * 10
+		return energiaInicial
+	}
+	
+	method dormir(){
+		// El enunciado no especifica practicamente que hace la funciond de dormir
+		// Asi que le invento que recupere hasta energia inicial o no duerma
+		if(self.tieneHambre()){
+			energia = self.energiaInicial()
+		}
 	}
 
 	method tieneHambre() {
@@ -29,19 +39,31 @@
 
 	method comer(alimento) {
 		if (alimento.tipo() == "fruta" || alimento.tipo() == "verdura") {
-			energia -= 1
+			energia+=1
 		} else if (alimento.tipo() == "bebida") {
-			energia -= 0.5
+			energia += 0.5
 		} else {
 			energia -= 0.2
 		}
 		self.agregarComidas([ alimento ])
-	// Falta agregar que se ria había hecho un if que se fija en tieneHambre pero algo funca mal
+		
+		if(vecesJugadas > 1){
+			self.baniarse() // Se tiene que bañar por que comio y jugo
+		}
+		
+		if(self.tieneHambre()){
+			return ""
+		}
+		return self.reir()
 	}
 
 	method jugar(juego) {
+		vecesJugadas += 1
 		if (self.juegos().contains(juego)) {
 			self.reir()
+		}
+		if(self.comidas().size() > 1){
+			self.baniarse() // Se tiene que bañar por que comio y jugo
 		}
 		return self.reir()
 	}
