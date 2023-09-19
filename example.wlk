@@ -37,7 +37,7 @@ object pou
 	 		 	energia -= 0.5
 	 			} else {   energia -= 0.2}
 	 	self.agregarComidas([alimento])		
-	 //Falta agregar que se ria había hecho un if que se fija en tieneHambre pero algo funca mal
+	
 	 
 	}
 	
@@ -48,11 +48,11 @@ object pou
 	}
 
 	method baniarse(){
-		energia-=2 // no entiendo bien lo de si comio y jugo
-		        // entiendo que para comio sería si el size de comidas es mayor a 0 pero no con juegos
+		energia-=2 
+		        
 	}
 		
-	method energizarse(){ // esto dice algo que debe estar alegre pero nunca dice cuando esta alegre
+	method energizarse(){ //  dice algo que debe estar alegre pero nunca dice cuando esta alegre
 		if (energia <= self.energiaInicial()){ energia= self.energiaInicial()}
 	}
 
