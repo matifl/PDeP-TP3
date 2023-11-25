@@ -152,3 +152,6 @@ class Alimento{
 	var property tipoDeCoccion
 	
 }
+class Cocciones inherits Alimento {
+
+}
