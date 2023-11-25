@@ -5,42 +5,75 @@ object pou
 	var salud
  	var property energia = self.energiaInicial() 
 	const property comidas =[]
-	const  property juegos=["pelota"]
-
+	const property juegos=["pelota"]
+	
  	method edad(){
  		return edad
-	@@ -25,6 +71,7 @@ object pou
-	}
+ 	}
 
+	method agregarComidas(comida){
+		 self.comidas().addAll(comida)
+	}
+	
+	method energiaInicial(){
+		energia= self.edad() * 10
+	 	return energia
+	}
+	 
+	method tieneHambre(){
+		return  energia < self.energiaInicial() 
+	}
+	
 	method reir(){
 		return "jijijiji"
 	}
-
-	@@ -38,22 +85,28 @@ object pou
+	
+	method comer(alimento){
+	 
+	 	if(alimento.tipo()=="fruta" ||alimento.tipo()=="verdura" ){
+	 		 energia -=  1 
+	 	} else if(alimento.tipo()=="bebida")
+	 			{
+	 		 	energia -= 0.5
 	 			} else {   energia -= 0.2}
 	 	self.agregarComidas([alimento])		
-	 //Falta agregar que se ria había hecho un if que se fija en tieneHambre pero algo funca mal
 
+	 
 	}
-
+	
 	method jugar(juego){
 		if (self.juegos().contains(juego)){
 			self.reir()
 		}
+		return null
+		
 	}
 
 	method baniarse(){
-		energia-=2 // no entiendo bien lo de si comio y jugo
-		        // entiendo que para comio sería si el size de comidas es mayor a 0 pero no con juegos
-	}
+		energia-=2 
 
-	method energizarse(){ // esto dice algo que debe estar alegre pero nunca dice cuando esta alegre
+	}
+		
+	method energizarse(){ 
 		if (energia <= self.energiaInicial()){ energia= self.energiaInicial()}
 	}
 
 	method salud(){
-	@@ -74,28 +127,28 @@ object pou
-
+	 const saludables =self.comidas().count { comida=>comida.tipo()=="fruta" ||comida.tipo()=="bebida" ||
+	 	comida.tipo()=="verdura"||comida.tipo()=="carne"
+	 }
+	 const porcentajeSaludable =  saludables / self.comidas().size()
+	 const insalubres = self.comidas().count{comida=>comida.tipo()=="fritura"}
+	 const porcentajesInsalubres = insalubres / self.comidas().size()
+	 
+	 if (porcentajesInsalubres > porcentajeSaludable){
+	  	salud= "Deplorable"
+	 } else if(porcentajesInsalubres == porcentajeSaludable){
+	  	salud= "Alarmante"
+	 } else if (porcentajesInsalubres < porcentajeSaludable){
+	  	salud="Normal"
+	 }
+	 
 	 return salud
 	}
 }
