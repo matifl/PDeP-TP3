@@ -1,16 +1,62 @@
-class MaquinaPou{
-	var edad = 3
-	var salud
+//TODO agregar la excepcion en la energia menor que 0
+object funcionesAuxiliares{
+	method postEjecucion(unPou){
+		if(unPou.cantidadDeAcciones() >= 5){
+			unPou.setearCantidadDeAcciones(0)
+			unPou.envejecer()
+		}
+		unPou.aumentarAccionesRealizadas()
+	}
+}
+
+
+
+// Me traigo el Pou de la parte 1
+class Pou{
+	// Seteo las properties iniciales para que todos los pous cumplan con un estandar
+	// Solo se van a sobreescribir las properties que le pasemos en el constructor
+	var property edad = 3
+	var property animo = "Feliz"
+	var property salud = "Normal"
  	var property energia = self.energiaInicial() 
 	const property comidas =[]
 	const  property juegos=["pelota"]
-	var property animo= "aburrido"
+	const property aniosQueEnvejece = 0
+	var property accionesRealizadas = 0
+	
+	method aumentarAccionesRealizadas(){
+		accionesRealizadas+=1
+	}
+	
+	method energiaActual(){
+		return energia
+	}
+	
+	method alegrarse(){
+		animo = "Feliz"
+	}
+	
+	method estadoDeAnimo(){
+		return animo
+	}
+	
+	method cantidadDeAcciones(){
+		return accionesRealizadas
+	}
+	
+	method setearCantidadDeAcciones(numero){
+		accionesRealizadas = numero
+	}
+	
+	// Se va a llamar cada vez que se haga una accion
+	method envejecer(){
+		edad+= aniosQueEnvejece
+	}
+	
  	method edad(){
  		return edad
  	}
-   method aburrido(){
-   	return self.animo()=="aburrido")
-   }
+
 	method agregarComidas(comida){
 		 self.comidas().addAll(comida)
 	}
@@ -25,11 +71,12 @@ class MaquinaPou{
 	}
 	
 	method reir(){
+		funcionesAuxiliares.postEjecucion(self)
 		return "jijijiji"
 	}
 	
 	method comer(alimento){
-	 if (self.tieneHambre()){ self.reir()}
+	 
 	 	if(alimento.tipo()=="fruta" ||alimento.tipo()=="verdura" ){
 	 		 energia -=  1 
 	 	} else if(alimento.tipo()=="bebida")
@@ -37,23 +84,29 @@ class MaquinaPou{
 	 		 	energia -= 0.5
 	 			} else {   energia -= 0.2}
 	 	self.agregarComidas([alimento])		
+	 //Falta agregar que se ria había hecho un if que se fija en tieneHambre pero algo funca mal
+	 funcionesAuxiliares.postEjecucion(self)
 	 
-	 return self.energia()
 	}
 	
 	method jugar(juego){
 		if (self.juegos().contains(juego)){
-		return	self.reir()
+			self.reir()
 		}
-		else {return null}
+		funcionesAuxiliares.postEjecucion(self)
+		
 	}
 
 	method baniarse(){
-		energia-=2 
+		energia-=2 // no entiendo bien lo de si comio y jugo
+		        // entiendo que para comio sería si el size de comidas es mayor a 0 pero no con juegos
+		funcionesAuxiliares.postEjecucion(self)
+		
 	}
 		
 	method energizarse(){ // esto dice algo que debe estar alegre pero nunca dice cuando esta alegre
 		if (energia <= self.energiaInicial()){ energia= self.energiaInicial()}
+		funcionesAuxiliares.postEjecucion(self)
 	}
 
 	method salud(){
@@ -74,25 +127,28 @@ class MaquinaPou{
 	 
 	 return salud
 	}
-	method animarse(pouAmigo){
-		if (self.aburrido() && pouAmigo.aburrido()){
-			animo="feliz"
-			return self.reir()
-		} else if (!pouAmigo.aburrido() && pouAmigo.energia()<self.energia()  ){
-				throw new PouException(message = "Pou amigo feliz y con menos energia")
-		}
-		return self.animo()
-	}
-}
-
-class PouException inherits Exception {
-
-}
-
-class Alimento{
-	const energizador
 	
-	method esFritura(){
-		return 
+	
+	method jugarConOtro(otroPou){
+		
+		if(animo == "Aburrido" && otroPou.estadoDeAnimo() == "Feliz" && energia > otroPou.energiaActual()){
+			throw "Un pou malvado"
+		}
+		
+		if(animo == "Aburrido" && otroPou.estadoDeAnimo() == animo){
+			self.alegrarse()
+			otroPou.alegrarse()
+			
+			// Ambos jugaron, ambos pagan las consecuencias (?
+			funcionesAuxiliares.postEjecucion(self)
+			funcionesAuxiliares.postEjecucion(otroPou)
+		}
 	}
+}
+
+// TODO Agregar comidas
+class Alimento{
+	var property energia
+	var property tipoDeCoccion
+	
 }
