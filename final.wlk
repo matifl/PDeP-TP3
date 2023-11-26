@@ -1,13 +1,4 @@
-//TODO agregar la excepcion en la energia menor que 0
-object funcionesAuxiliares{
-	method postEjecucion(unPou){
-		if(unPou.cantidadDeAcciones() >= 5){
-			unPou.setearCantidadDeAcciones(0)
-			unPou.envejecer()
-		}
-		unPou.aumentarAccionesRealizadas()
-	}
-}
+
 class EstadoPouBase {
 	var property animo = "Feliz"
 	var property salud = "Normal"
