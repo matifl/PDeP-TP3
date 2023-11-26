@@ -66,7 +66,7 @@ class Pou{
 	 	if (self.tieneHambre()){
 	 		self.reir()
 	 	}
-	 	energia += alimento.efectoEnergizante()
+	 	energia += alimento.energia()
 	 	self.energiaBaja() //reviso que la energia no sea baja
 	 	self.agregarComidas([alimento])		
 	 	self.aumentarAccionesRealizadas() 
@@ -118,7 +118,6 @@ class Pou{
 		 	throw new NoEstanAburridos(message="No están aptos para jugar")
 		 	} else(estadoPou.feliz() && (self.mayorEnergiaPrimerPou(otroPou,self)))
 			throw new NoEstanAburridos(message="No están aptos para jugar")
-	 self.aumentarAccionesRealizadas()
 	}
 				
 	method mayorEnergiaPrimerPou(pou1,pou2){
