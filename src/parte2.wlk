@@ -1,161 +1,148 @@
-object funcionesAuxiliares{
-	
-	method postEjecucion(unPou){
-		if(unPou.cantidadDeAcciones() >= 5){
-			unPou.setearCantidadDeAcciones(0)
-			unPou.envejecer()
-		}
-		unPou.aumentarAccionesRealizadas()
+class EstadoPouBase {
+	var property animo = "Feliz"
+	var property salud = "Normal"
+	var property seBanio = false
+	var property durmio = false
+	var property seRio= false
+		method aburrido(){
+		return self.animo()=="Aburrido"
+	}
+		method feliz(){
+		return self.animo()=="Feliz"
+	}
+		method estaAlegre(){
+		return self.animo()=="Alegre"
 	}
 	
-	 method escribirError(msg){
-		return "Error: "+msg
-	}
 }
 
 
-
-// Me traigo el Pou de la parte 1
 class Pou{
 	// Seteo las properties iniciales para que todos los pous cumplan con un estandar
 	// Solo se van a sobreescribir las properties que le pasemos en el constructor
 	var property edad = 3
-	var property animo = "Feliz"
-	var property salud = "Normal"
+   const property estadoPou 
+   // se debe inicializar un pou con un objeto del tipo estadoPou para que funcione
+	
  	var property energia = self.energiaInicial() 
 	const property comidas =[]
 	const  property juegos=["pelota"]
-	var property aniosQueEnvejece = 0
+	const property aniosQueEnvejece = 0
 	var property accionesRealizadas = 0
 	
 	method aumentarAccionesRealizadas(){
-		accionesRealizadas++
-	}
-	
-	method setearEnergiaActual(num){
-		if(num<self.energiaInicial()){
-			self.energizarse()
-			funcionesAuxiliares.escribirError( "Pou se quedo sin energia!")
-		}else{
-			energia=num
-		}
-	}
-	
-	method energiaActual(){
-		return energia
+		accionesRealizadas+=1
 	}
 	
 	method alegrarse(){
-		animo = "Feliz"
+	 estadoPou.animo("Feliz") 
 	}
 	
-	method estadoDeAnimo(){
-		return animo
+	method energiaBaja(){ //Cada vez que otro metodo edita la energia llama a esta funcion
+		if(energia< (self.edad() * 10)){ 
+			self.energizarse()
+			throw new EnergiaBaja(message="La energia es critica")
+		}
 	}
-	
-	method cantidadDeAcciones(){
-		return accionesRealizadas
-	}
-	
-	method setearCantidadDeAcciones(numero){
-		accionesRealizadas = numero
-	}
-	
-	// Se va a llamar cada vez que se haga una accion
-	method envejecer(){
-		edad+= aniosQueEnvejece
-	}
-	
- 	method edad(){
- 		return edad
- 	}
-
 	method agregarComidas(comida){
 		 self.comidas().addAll(comida)
 	}
 	
 	method energiaInicial(){
-		return self.edad() * 10
+		energia= self.edad() * 10
+	 	return energia
 	}
-	 
 	method tieneHambre(){
 		return  energia < self.energiaInicial() 
 	}
 	
 	method reir(){
-		funcionesAuxiliares.postEjecucion(self)
-		return "jijijiji"
+		estadoPou.seRio(true)
+		self.aumentarAccionesRealizadas()
+		return "jijijiji"	
 	}
 	
 	method comer(alimento){
-	 
-	 	if(alimento.tipo()=="fruta" ||alimento.tipo()=="verdura" ){
-	 		 energia -=  1 
-	 	} else if(alimento.tipo()=="bebida")
-	 			{
-	 		 	energia -= 0.5
-	 			} else {   energia -= 0.2}
+	 	if (self.tieneHambre()){
+	 		self.reir()
+	 	}
+	 	energia += alimento.efectoEnergizante()
+	 	self.energiaBaja() //reviso que la energia no sea baja
 	 	self.agregarComidas([alimento])		
-	 //Falta agregar que se ria había hecho un if que se fija en tieneHambre pero algo funca mal
-	 funcionesAuxiliares.postEjecucion(self)
-	 
+	 	self.aumentarAccionesRealizadas() 
 	}
 	
 	method jugar(juego){
 		if (self.juegos().contains(juego)){
 			self.reir()
+			self.baniarse() //La consigna dice que si jugo y comio se tiene que bañar, entonces cada vez que juega llama a baniarse
 		}
-		funcionesAuxiliares.postEjecucion(self)
-		
+		self.aumentarAccionesRealizadas()
 	}
+	method comio()= comidas.size()>0
+	
 
 	method baniarse(){
-		energia-=2 
-		funcionesAuxiliares.postEjecucion(self)
+		if (self.comio()){		energia-=2 
+			self.energiaBaja() // chequea energia bajha
+		} //aca revisa haber comido 
+	self.aumentarAccionesRealizadas()
 		
 	}
 		
 	method energizarse(){ 
-		if (energia <= self.energiaInicial()){ energia= self.energiaInicial()}
-		funcionesAuxiliares.postEjecucion(self)
+		if (estadoPou.estaAlegre() && (energia <= self.energiaInicial())){ energia= self.energiaInicial()}
+		self.aumentarAccionesRealizadas()
 	}
 
 	method salud(){
-	 const saludables =self.comidas().count { comida=>comida.tipo()=="fruta" ||comida.tipo()=="bebida" ||
-	 	comida.tipo()=="verdura"||comida.tipo()=="carne"
-	 }
-	 const porcentajeSaludable=  saludables / self.comidas().size()
-	 const insalubres = self.comidas().count{comida=>comida.tipo()=="fritura"}
-	 const porcentajesInsalubres= insalubres / self.comidas().size()
+	 var saludables =self.comidas().count { comida=>comida.esSaludable() }
+	 var porcentajeSaludable=  saludables / self.comidas().size()
+	 var insalubres = self.comidas().count{comida=>comida.esSaludable()}
+	 var porcentajesInsalubres= insalubres / self.comidas().size()
 	 
 	 if (porcentajesInsalubres > porcentajeSaludable){
-	  	salud= "Deplorable"
-	 } else if(porcentajesInsalubres == porcentajeSaludable){
-	  	salud= "Alarmante"
-	 } else if (porcentajesInsalubres < porcentajeSaludable){
-	  	salud="Normal"
+	  	estadoPou.salud("Deplorable") 
+	 } else if(porcentajesInsalubres == porcentajeSaludable && !(estadoPou.seRio())){
+	  	estadoPou.salud("Alarmante") 
+	 } else if (porcentajesInsalubres < porcentajeSaludable && !(estadoPou.seRio())){
+	  	estadoPou.salud("Normal") 
 	 }
-	 
-	 return salud
+	 self.aumentarAccionesRealizadas()
+	 return estadoPou.salud()
 	}
 	
 	
 	method jugarConOtro(otroPou){
+	if((otroPou.estadoPou().feliz()) && (self.mayorEnergiaPrimerPou(self,otroPou))){
+		 	throw new NoEstanAburridos(message="No están aptos para jugar")
+		 	} else(estadoPou.feliz() && (self.mayorEnergiaPrimerPou(otroPou,self)))
+			throw new NoEstanAburridos(message="No están aptos para jugar")
+	 self.aumentarAccionesRealizadas()
+	}
+				
+	method mayorEnergiaPrimerPou(pou1,pou2){
+		return pou1.energia()>pou2.energia()
+	}
+
 		
-		if(animo == "Aburrido" && otroPou.estadoDeAnimo() == "Feliz" && energia > otroPou.energiaActual()){
-			funcionesAuxiliares.escribirError("Un pou malvado")
-		}
-		
-		if(animo == "Aburrido" && otroPou.estadoDeAnimo() == animo){
-			self.alegrarse()
-			otroPou.alegrarse()
-			
-			// Ambos jugaron, ambos pagan las consecuencias (?
-			funcionesAuxiliares.postEjecucion(self)
-			funcionesAuxiliares.postEjecucion(otroPou)
+
+	
+
+}
+class PouViejo inherits Pou{
+	override method aumentarAccionesRealizadas(){
+	accionesRealizadas+=1
+		if(accionesRealizadas==5){
+			accionesRealizadas=0
+			edad+=1
 		}
 	}
 }
+// clase estados Pou, en la clase pou no esta inicializada para que se envie un objeto base del estado al crear un pou
+
+const estadoPouInicial = new EstadoPouBase()//ej estado para un pout
+const estadoPoucito= new EstadoPouBase(animo="triste",durmio=true)
 
 class Alimento{
 	var property tipoDeCoccion=new Coccion()
@@ -204,3 +191,8 @@ const banana = new Fruta()
 const brocoli = new Verdura()
 const pouAdulto = new Pou(aniosQueEnvejece=1,edad=20,animo="Aburrido")
 const pouComun = new Pou(edad=5,animo="Aburrido")
+
+//ERROR
+class NoEstanAburridos inherits Exception{}
+class EnergiaBaja inherits Exception{}
+
