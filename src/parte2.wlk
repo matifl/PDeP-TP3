@@ -188,8 +188,7 @@ const olla = new Coccion()
 const agua = new Bebida()
 const banana = new Fruta()
 const brocoli = new Verdura()
-const pouAdulto = new Pou(aniosQueEnvejece=1,edad=20,animo="Aburrido")
-const pouComun = new Pou(edad=5,animo="Aburrido")
+
 
 //ERROR
 class NoEstanAburridos inherits Exception{}
