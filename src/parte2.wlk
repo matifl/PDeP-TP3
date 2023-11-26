@@ -1,11 +1,15 @@
-//TODO agregar la excepcion en la energia menor que 0
 object funcionesAuxiliares{
+	
 	method postEjecucion(unPou){
 		if(unPou.cantidadDeAcciones() >= 5){
 			unPou.setearCantidadDeAcciones(0)
 			unPou.envejecer()
 		}
 		unPou.aumentarAccionesRealizadas()
+	}
+	
+	 method escribirError(msg){
+		return "Error: "+msg
 	}
 }
 
@@ -21,11 +25,20 @@ class Pou{
  	var property energia = self.energiaInicial() 
 	const property comidas =[]
 	const  property juegos=["pelota"]
-	const property aniosQueEnvejece = 0
+	var property aniosQueEnvejece = 0
 	var property accionesRealizadas = 0
 	
 	method aumentarAccionesRealizadas(){
-		accionesRealizadas+=1
+		accionesRealizadas++
+	}
+	
+	method setearEnergiaActual(num){
+		if(num<self.energiaInicial()){
+			self.energizarse()
+			funcionesAuxiliares.escribirError( "Pou se quedo sin energia!")
+		}else{
+			energia=num
+		}
 	}
 	
 	method energiaActual(){
@@ -62,8 +75,7 @@ class Pou{
 	}
 	
 	method energiaInicial(){
-		energia= self.edad() * 10
-	 	return energia
+		return self.edad() * 10
 	}
 	 
 	method tieneHambre(){
@@ -98,24 +110,23 @@ class Pou{
 	}
 
 	method baniarse(){
-		energia-=2 // no entiendo bien lo de si comio y jugo
-		        // entiendo que para comio sería si el size de comidas es mayor a 0 pero no con juegos
+		energia-=2 
 		funcionesAuxiliares.postEjecucion(self)
 		
 	}
 		
-	method energizarse(){ // esto dice algo que debe estar alegre pero nunca dice cuando esta alegre
+	method energizarse(){ 
 		if (energia <= self.energiaInicial()){ energia= self.energiaInicial()}
 		funcionesAuxiliares.postEjecucion(self)
 	}
 
 	method salud(){
-	 var saludables =self.comidas().count { comida=>comida.tipo()=="fruta" ||comida.tipo()=="bebida" ||
+	 const saludables =self.comidas().count { comida=>comida.tipo()=="fruta" ||comida.tipo()=="bebida" ||
 	 	comida.tipo()=="verdura"||comida.tipo()=="carne"
 	 }
-	 var porcentajeSaludable=  saludables / self.comidas().size()
-	 var insalubres = self.comidas().count{comida=>comida.tipo()=="fritura"}
-	 var porcentajesInsalubres= insalubres / self.comidas().size()
+	 const porcentajeSaludable=  saludables / self.comidas().size()
+	 const insalubres = self.comidas().count{comida=>comida.tipo()=="fritura"}
+	 const porcentajesInsalubres= insalubres / self.comidas().size()
 	 
 	 if (porcentajesInsalubres > porcentajeSaludable){
 	  	salud= "Deplorable"
@@ -132,7 +143,7 @@ class Pou{
 	method jugarConOtro(otroPou){
 		
 		if(animo == "Aburrido" && otroPou.estadoDeAnimo() == "Feliz" && energia > otroPou.energiaActual()){
-			throw "Un pou malvado"
+			funcionesAuxiliares.escribirError("Un pou malvado")
 		}
 		
 		if(animo == "Aburrido" && otroPou.estadoDeAnimo() == animo){
@@ -146,12 +157,50 @@ class Pou{
 	}
 }
 
-// TODO Agregar comidas
 class Alimento{
-	var property energia
-	var property tipoDeCoccion
+	var property tipoDeCoccion=new Coccion()
+	
+	method energia(){
+		return tipoDeCoccion.aportado()
+	}
+}
+
+class Fruta inherits Alimento{
+	override method energia(){
+		return 1
+	}
 	
 }
-class Cocciones inherits Alimento {
 
+class Verdura inherits Alimento{
+	override method energia(){
+		return 1
+	}
 }
+
+class Bebida inherits Alimento{
+	override method energia(){
+		return 0.5
+	}
+}
+
+
+// Todos los alimentos que no sean fruta,verdura o bebida solo aportan 0.2 exceptuando a las frituras
+class Coccion {
+	const property aporteProteico=0.2
+	
+	method aportado(){
+		return aporteProteico
+	}
+}
+
+// Dejo ya creados algunos objetos para pruebas
+const freidora = new Coccion(aporteProteico=-0.2)
+const sarten = new Coccion()
+const plancha = new Coccion()
+const olla = new Coccion()
+const agua = new Bebida()
+const banana = new Fruta()
+const brocoli = new Verdura()
+const pouAdulto = new Pou(aniosQueEnvejece=1,edad=20,animo="Aburrido")
+const pouComun = new Pou(edad=5,animo="Aburrido")
